@@ -1,0 +1,4 @@
+- name: Config wordpress
+  hosts: "{{ groups['ungrouped'][0] }}"
+  roles:
+    - wordpress

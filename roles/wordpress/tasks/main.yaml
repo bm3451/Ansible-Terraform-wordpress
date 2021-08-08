@@ -1,0 +1,46 @@
+- name: Download Wordpress Source
+  async: 300
+  poll: 0
+  register: wp_source_result
+  get_url:
+    url: "{{ wp['url'] }}"
+    checksum: "{{ wp['sha1'] }}"
+    dest: "{{ wp['source'] }}"
+
+- name: Install Apache2 Package
+  apt:
+    update_cache: yes
+    name: apache2, php, php-mysql, php-gd, php-mbstring
+    state: present
+  when: ansible_facts['os_family'] == "Debian"
+- name: Install Httpd Package
+  yum:
+    name: httpd, php, php-mysql, php-gd, php-mbstring
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Changing Apache Ports
+  template:
+    src: ports.conf.j2
+    dest: /etc/apache2/ports.conf
+  notify:
+  - Restart apache
+
+- name: sync
+  async_status:
+    jid: "{{ wp_source_result.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 100
+
+- name: Unarchive Wordpress Source
+  unarchive:
+    src: "{{ wp['archive_path'] }}"
+    remote_src: true
+    dest: /var/www/html
+
+- name: Set wordpress wp-config
+  template:
+    src: wp-config.php.j2
+    dest: "{{ wp['config_file_path'] }}"
+

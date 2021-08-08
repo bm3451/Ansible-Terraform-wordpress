@@ -1,0 +1,16 @@
+wp:
+  version: "5.8"
+  url:  "https://ko.wordpress.org/wordpress-5.8-ko_KR.tar.gz"
+  source: "/home/ubuntu"
+  config_file_path: "/var/www/html/wordpress/wp-config.php"
+  sha1: sha1:151d0c3b1f643516a1cdee2cc35ed9eceaa312c0
+  archive_path: "/home/ubuntu/wordpress-5.8-ko_KR.tar.gz" 
+apache:
+  port: 8080
+mysql:
+  socket: /var/run/mysqld/mysqld.sock
+  db: 'wpdb'
+  user: 'wpadm'
+  passwd: 'hwangsy98!'
+  host: "{{ db_host }}"
+

@@ -1,0 +1,8 @@
+mysql:
+  socket: /var/run/mysqld/mysqld.sock
+  db: 'wpdb'
+  user: 'wpadm'
+  passwd: 'P@ssw0rd'
+  host: '%' 
+apache:
+  port: 8080

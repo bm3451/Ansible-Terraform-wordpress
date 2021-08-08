@@ -1,0 +1,42 @@
+- name: Install MySQL Package
+  block:
+  - name: Install mysql
+    apt:
+      update_cache: true
+      name: python3-pymysql, mysql-server
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
+  - name: Install MariaDB Package
+    yum:
+      name: mariadb-server, mariadb-client
+      state: present
+    when: ansible_facts['os_family'] == "RedHat"
+- name: Bind Address
+  template:
+    src: mysqld.cnf
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+  notify:
+  - Restart Mysql service
+
+- name: Create Wordpress Database
+  mysql_db:
+    login_user: root
+    login_password: ''
+    login_unix_socket: "{{ mysql['socket'] }}"
+    name: "{{ mysql['db'] }}"
+    state: present
+
+- name: Create Wordpress User
+  mysql_user:
+    check_implicit_admin: yes
+    login_user: root
+    login_password: ''
+    login_unix_socket: "{{ mysql['socket'] }}"
+    name: "{{ mysql['user'] }}"
+    password: "{{ mysql['passwd'] }}"
+    host: "{{ mysql['host'] }}"
+    priv: "{{ mysql['db'] }}.*:ALL,GRANT"
+    state: present
+
+
+
