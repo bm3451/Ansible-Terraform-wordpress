@@ -11,6 +11,6 @@ mysql:
   socket: /var/run/mysqld/mysqld.sock
   db: 'wpdb'
   user: 'wpadm'
-  passwd: 'hwangsy98!'
+  passwd: 'hwangsy98'
   host: "{{ db_host }}"
 
